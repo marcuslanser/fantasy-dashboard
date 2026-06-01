@@ -2503,7 +2503,7 @@
   let DYNASTY_REDRAFT_VALUES = {};
 
   async function loadDynastyValues() {
-    const url = 'https://safantasyfootballdata.blob.core.windows.net/fantasycalc/latest.csv';
+    const url = 'https://datalakestoragelanser.blob.core.windows.net/silver/fantasycalc/values.csv';
     let res;
     try {
       res = await fetch(url);
@@ -2519,7 +2519,7 @@
     const csvLines = text.trim().split('\n');
     if (csvLines.length < 2) { console.warn('[FantasyCalc] CSV empty'); return; }
     const headers = csvLines[0].split(',').map(h => h.trim());
-    const idIdx      = headers.indexOf('player_sleeperId');
+    const idIdx      = headers.indexOf('sleeperId');
     const valIdx     = headers.indexOf('value');
     const rdraftIdx  = headers.indexOf('redraftValue');
     if (idIdx === -1 || valIdx === -1) {
