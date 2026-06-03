@@ -1923,6 +1923,195 @@
       color: var(--text);
     }
 
+    /* ── Positional comparison table ────────────────────────────────────── */
+    .pos-compare-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .pos-compare-title {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .pos-compare-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.88rem;
+    }
+
+    .pos-compare-table th {
+      text-align: left;
+      color: var(--muted);
+      font-weight: 600;
+      padding: 0.4rem 0.75rem;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.8rem;
+    }
+
+    .pos-compare-table th:not(:first-child) { text-align: center; }
+
+    .pos-compare-table td {
+      padding: 0.55rem 0.75rem;
+      border-bottom: 1px solid rgba(46,50,80,0.4);
+      vertical-align: middle;
+    }
+
+    .pos-compare-table td:not(:first-child) { text-align: center; }
+    .pos-compare-table tr:last-child td { border-bottom: none; }
+
+    .pos-compare-fit td { background: rgba(234,179,8,0.05); }
+    .pos-compare-fit td:first-child { border-left: 3px solid rgba(234,179,8,0.55); padding-left: 0.5rem; }
+
+    .trade-fit-tag {
+      font-size: 0.66rem;
+      font-weight: 700;
+      color: #eab308;
+      margin-left: 0.4rem;
+      vertical-align: middle;
+    }
+
+    .pos-compare-sub {
+      display: block;
+      font-size: 0.7rem;
+      color: var(--muted);
+      margin-top: 0.1rem;
+    }
+
+    .tier-vs  { color: #22c55e; font-weight: 700; }
+    .tier-s   { color: #86efac; font-weight: 600; }
+    .tier-n   { color: var(--muted); }
+    .tier-w   { color: #fbbf24; font-weight: 600; }
+    .tier-vw  { color: #f87171; font-weight: 700; }
+
+    /* ── Target trade cards ─────────────────────────────────────────────── */
+    .target-trade-card {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      overflow: hidden;
+      margin-bottom: 0.85rem;
+    }
+
+    .target-trade-card:last-child { margin-bottom: 0; }
+
+    .target-trade-header {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 1rem;
+      background: rgba(255,255,255,0.02);
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .target-trade-opt-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: #22c55e;
+    }
+
+    .target-trade-structure {
+      font-size: 0.72rem;
+      font-weight: 600;
+      color: var(--muted);
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 0.12rem 0.5rem;
+    }
+
+    .target-trade-delta {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-left: auto;
+    }
+
+    .target-trade-body {
+      display: grid;
+      grid-template-columns: 1fr auto 1fr;
+      gap: 0.5rem;
+      padding: 0.85rem 1rem;
+      align-items: start;
+    }
+
+    .target-trade-col { min-width: 0; }
+
+    .target-trade-col-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+      margin-bottom: 0.5rem;
+    }
+
+    .target-trade-player-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.28rem 0.4rem;
+      border-radius: 5px;
+      font-size: 0.82rem;
+      margin-bottom: 0.2rem;
+      border: 1px solid transparent;
+    }
+
+    .target-trade-player-row.is-target {
+      background: rgba(34,197,94,0.07);
+      border-color: rgba(34,197,94,0.25);
+    }
+
+    .target-trade-player-name {
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-weight: 500;
+    }
+
+    .target-trade-player-val {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .target-trade-total {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 0.5rem;
+      padding-top: 0.45rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .target-trade-total strong { color: var(--text); }
+
+    .target-trade-arrow {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--muted);
+      font-size: 1.1rem;
+      padding-top: 1.75rem;
+    }
+
+    .target-no-trades {
+      text-align: center;
+      color: var(--muted);
+      padding: 2rem 1rem;
+      font-size: 0.88rem;
+      line-height: 1.6;
+    }
+
     @media (max-width: 700px) {
       .hub-grid { grid-template-columns: 1fr; }
       .player-profile-card { gap: 1rem; }
@@ -4424,24 +4613,192 @@
     renderPlayerProfile(pid, player);
   }
 
-  function renderPlayerProfile(pid, player) {
-    const isBuy = currentPlayerMode === 'buy';
-    const pos     = player.fantasy_positions?.[0] || player.position || '?';
-    const dynVal  = DYNASTY_VALUES[pid];
-    const rdraftVal = DYNASTY_REDRAFT_VALUES[pid];
-    const name    = `${player.first_name || ''} ${player.last_name || ''}`.trim();
+  // ── Positional analytics helpers ─────────────────────────────────────────────
 
-    // Find owner in league
-    let ownerName = 'Free Agent';
-    let ownerUser = null;
+  const SKILL_POS = ['QB', 'RB', 'WR', 'TE'];
+
+  function computeLeaguePosData(rosters, playerData) {
+    const teamSums = {};
+    rosters.forEach(r => {
+      const sums = { QB: null, RB: null, WR: null, TE: null };
+      const starterSet = new Set((r.starters || []).filter(id => id && id !== '0'));
+      starterSet.forEach(pid => {
+        const pl = playerData[pid];
+        if (!pl) return;
+        const pos = pl.fantasy_positions?.[0] || pl.position || '';
+        if (!SKILL_POS.includes(pos)) return;
+        const val = DYNASTY_VALUES[pid];
+        if (val != null) sums[pos] = (sums[pos] ?? 0) + val;
+      });
+      teamSums[r.roster_id] = sums;
+    });
+
+    const lgAvg = {}, lgStd = {};
+    SKILL_POS.forEach(pos => {
+      const vals = rosters.map(r => teamSums[r.roster_id]?.[pos]).filter(v => v != null);
+      const avg = vals.length ? vals.reduce((a, b) => a + b, 0) / vals.length : null;
+      const std = avg != null && vals.length > 1
+        ? Math.sqrt(vals.reduce((s, v) => s + (v - avg) ** 2, 0) / vals.length) : 1;
+      lgAvg[pos] = avg;
+      lgStd[pos] = std;
+    });
+
+    const teamZ = {};
+    rosters.forEach(r => {
+      teamZ[r.roster_id] = {};
+      SKILL_POS.forEach(pos => {
+        const sum = teamSums[r.roster_id]?.[pos];
+        const z = (sum != null && lgAvg[pos] != null)
+          ? (sum - lgAvg[pos]) / (lgStd[pos] || 1) : null;
+        teamZ[r.roster_id][pos] = { sum, z };
+      });
+    });
+
+    return { teamSums, lgAvg, lgStd, teamZ };
+  }
+
+  function strengthTierInfo(z) {
+    if (z == null)  return { label: '—',           cls: 'tier-n',  rank: 2 };
+    if (z >  1.5)  return { label: 'Very Strong',  cls: 'tier-vs', rank: 4 };
+    if (z >  0.5)  return { label: 'Strong',       cls: 'tier-s',  rank: 3 };
+    if (z > -0.5)  return { label: 'Neutral',      cls: 'tier-n',  rank: 2 };
+    if (z > -1.5)  return { label: 'Weak',         cls: 'tier-w',  rank: 1 };
+    return                 { label: 'Very Weak',   cls: 'tier-vw', rank: 0 };
+  }
+
+  function getPlayerPoolSorted(roster, playerData, teamZ) {
+    // All skill players on the roster with dynasty values,
+    // sorted by position z-score desc (trade from surplus first), then value desc
+    const starterSet = new Set((roster.starters || []).filter(id => id && id !== '0'));
+    return (roster.players || [])
+      .map(pid => {
+        const pl = playerData[pid];
+        if (!pl) return null;
+        const pos = pl.fantasy_positions?.[0] || pl.position || '';
+        if (!SKILL_POS.includes(pos)) return null;
+        const val = DYNASTY_VALUES[pid];
+        if (!val) return null;
+        return {
+          pid, val, pos,
+          name: `${pl.first_name || ''} ${pl.last_name || ''}`.trim(),
+          age: pl.age ?? null,
+          isStarter: starterSet.has(pid),
+          posZ: teamZ?.[pos]?.z ?? 0,
+        };
+      })
+      .filter(Boolean)
+      .sort((a, b) => Math.abs(b.posZ - a.posZ) > 0.2 ? b.posZ - a.posZ : b.val - a.val);
+  }
+
+  function generateTargetTrades(targetPid, targetPlayer, partnerRoster) {
+    if (!selectedRoster || !leagueData) return [];
+    const { rosters, playerData } = leagueData;
+    const targetVal = DYNASTY_VALUES[targetPid] ?? 0;
+    if (!targetVal) return [];
+
+    const posData   = computeLeaguePosData(rosters, playerData);
+    const myZ       = posData.teamZ[selectedRoster.roster_id] || {};
+    const partnerZ  = posData.teamZ[partnerRoster.roster_id]  || {};
+    const myPool    = getPlayerPoolSorted(selectedRoster, playerData, myZ);
+    const partPool  = getPlayerPoolSorted(partnerRoster,  playerData, partnerZ)
+      .filter(p => p.pid !== targetPid);
+
+    const targetEntry = {
+      pid: targetPid,
+      name: `${targetPlayer.first_name || ''} ${targetPlayer.last_name || ''}`.trim(),
+      pos: targetPlayer.fantasy_positions?.[0] || targetPlayer.position || '?',
+      val: targetVal,
+      age: targetPlayer.age ?? null,
+      isStarter: true,
+    };
+
+    const TOL = 500;
+    const trades  = [];
+    const usedMy  = new Set();
+
+    function tryAdd(mySends, partnerSends) {
+      const key = mySends.map(p => p.pid).sort().join('|');
+      if (trades.some(t => t.mySends.map(p => p.pid).sort().join('|') === key)) return false;
+      trades.push({ mySends, partnerSends });
+      mySends.forEach(p => usedMy.add(p.pid));
+      return true;
+    }
+
+    // Option A: 1-for-1
+    const a = myPool.find(p => Math.abs(p.val - targetVal) <= TOL);
+    if (a) tryAdd([a], [targetEntry]);
+
+    // Option B: user sends 2 for target alone
+    {
+      const pool = myPool.filter(p => !usedMy.has(p.pid)).slice(0, 10);
+      let found = false;
+      outer: for (let i = 0; i < pool.length && !found; i++) {
+        for (let j = i + 1; j < pool.length && !found; j++) {
+          if (Math.abs(pool[i].val + pool[j].val - targetVal) <= TOL) {
+            if (tryAdd([pool[i], pool[j]], [targetEntry])) found = true;
+          }
+        }
+      }
+    }
+
+    // Option C: partner adds a sweetener; user sends player(s) to match combined value
+    if (trades.length < 3) {
+      for (const sw of partPool.slice(0, 8)) {
+        if (trades.length >= 3) break;
+        const combined = targetVal + sw.val;
+        const eligible = myPool.filter(p => !usedMy.has(p.pid));
+
+        // 1 my player for target + sweetener
+        const c1 = eligible.find(p => Math.abs(p.val - combined) <= TOL);
+        if (c1) { tryAdd([c1], [targetEntry, sw]); break; }
+
+        // 2 my players for target + sweetener
+        let found2 = false;
+        outer2: for (let i = 0; i < eligible.length && i < 8 && !found2; i++) {
+          for (let j = i + 1; j < eligible.length && j < 8 && !found2; j++) {
+            if (Math.abs(eligible[i].val + eligible[j].val - combined) <= TOL) {
+              if (tryAdd([eligible[i], eligible[j]], [targetEntry, sw])) found2 = true;
+            }
+          }
+        }
+        if (found2) break;
+      }
+    }
+
+    // Fallback: closest 1-for-1 options with relaxed tolerance
+    if (trades.length < 3) {
+      const sorted = [...myPool]
+        .filter(p => !trades.some(t => t.mySends.length === 1 && t.mySends[0].pid === p.pid))
+        .sort((a, b) => Math.abs(a.val - targetVal) - Math.abs(b.val - targetVal));
+      for (const p of sorted) {
+        if (trades.length >= 3) break;
+        tryAdd([p], [targetEntry]);
+      }
+    }
+
+    return trades.slice(0, 3);
+  }
+
+  // ── Player profile rendering ──────────────────────────────────────────────────
+
+  function renderPlayerProfile(pid, player) {
+    const isBuy     = currentPlayerMode === 'buy';
+    const pos       = player.fantasy_positions?.[0] || player.position || '?';
+    const dynVal    = DYNASTY_VALUES[pid];
+    const rdraftVal = DYNASTY_REDRAFT_VALUES[pid];
+    const name      = `${player.first_name || ''} ${player.last_name || ''}`.trim();
+
+    // Resolve owner
+    let ownerRoster = null, ownerUser = null, ownerName = 'Free Agent';
     if (leagueData) {
       const userMap = {};
       leagueData.users.forEach(u => { userMap[u.user_id] = u; });
       for (const roster of leagueData.rosters) {
         if ((roster.players || []).includes(pid)) {
           const u = userMap[roster.owner_id] || {};
-          ownerName = (u.metadata?.team_name) || u.display_name || `Team ${roster.roster_id}`;
-          ownerUser = u;
+          ownerName   = (u.metadata?.team_name) || u.display_name || `Team ${roster.roster_id}`;
+          ownerUser   = u;
+          ownerRoster = roster;
           break;
         }
       }
@@ -4451,15 +4808,14 @@
     section.innerHTML = '';
     section.style.display = 'block';
 
+    // ── 1. Player info card ──
     const card = document.createElement('div');
     card.className = `player-profile-card ${isBuy ? 'buy-card' : 'sell-card'}`;
 
-    // Position icon
     const posIcon = document.createElement('div');
     posIcon.className = `player-pos-icon ${isBuy ? 'buy-icon' : 'sell-icon'}`;
     posIcon.textContent = pos;
 
-    // Info block
     const info = document.createElement('div');
     info.className = 'player-profile-info';
 
@@ -4467,20 +4823,18 @@
     nameEl.className = 'player-profile-name';
     nameEl.textContent = name;
 
-    // Meta row (pos chip, team, age)
     const meta = document.createElement('div');
     meta.className = 'player-profile-meta';
 
     const posChip = document.createElement('span');
     posChip.className = 'pos-chip';
-    posChip.style.cssText = `color:${POS_COLORS[pos] || '#aaa'};font-size:0.78rem;padding:0.18rem 0.45rem;`;
+    posChip.style.cssText = `color:${POS_COLORS[pos]||'#aaa'};font-size:0.78rem;padding:0.18rem 0.45rem;`;
     posChip.textContent = pos;
+    meta.appendChild(posChip);
 
     const nflBadge = document.createElement('span');
     nflBadge.className = 'badge';
     nflBadge.textContent = player.team || 'Free Agent';
-
-    meta.appendChild(posChip);
     meta.appendChild(nflBadge);
 
     if (player.age) {
@@ -4490,52 +4844,218 @@
       meta.appendChild(ageBadge);
     }
 
-    // Stat boxes
     const stats = document.createElement('div');
     stats.className = 'player-profile-stats';
-
     if (dynVal != null) {
-      const box = document.createElement('div');
-      box.className = 'player-stat-box';
-      box.innerHTML = `<div class="player-stat-label">Dynasty Value</div><div class="player-stat-value ${isBuy ? 'buy-val' : 'sell-val'}">${fmtVal(dynVal)}</div>`;
-      stats.appendChild(box);
+      const b = document.createElement('div');
+      b.className = 'player-stat-box';
+      b.innerHTML = `<div class="player-stat-label">Dynasty Value</div><div class="player-stat-value ${isBuy ? 'buy-val' : 'sell-val'}">${fmtVal(dynVal)}</div>`;
+      stats.appendChild(b);
     }
-
     if (rdraftVal != null) {
-      const box = document.createElement('div');
-      box.className = 'player-stat-box';
-      box.innerHTML = `<div class="player-stat-label">Redraft Value</div><div class="player-stat-value blue-val">${fmtVal(rdraftVal)}</div>`;
-      stats.appendChild(box);
+      const b = document.createElement('div');
+      b.className = 'player-stat-box';
+      b.innerHTML = `<div class="player-stat-label">Redraft Value</div><div class="player-stat-value blue-val">${fmtVal(rdraftVal)}</div>`;
+      stats.appendChild(b);
     }
 
-    // Owner row
     const ownedRow = document.createElement('div');
     ownedRow.className = 'player-owned-row';
     ownedRow.appendChild(avatarEl(ownerUser?.avatar, ownerName, 'owner'));
-    const ownedLabel = document.createElement('span');
-    ownedLabel.innerHTML = `Owned by <span class="player-owned-name">${ownerName}</span>`;
-    ownedRow.appendChild(ownedLabel);
+    const ownedLbl = document.createElement('span');
+    ownedLbl.innerHTML = `Owned by <span class="player-owned-name">${ownerName}</span>`;
+    ownedRow.appendChild(ownedLbl);
 
     info.appendChild(nameEl);
     info.appendChild(meta);
     info.appendChild(stats);
     info.appendChild(ownedRow);
-
     card.appendChild(posIcon);
     card.appendChild(info);
     section.appendChild(card);
 
-    // Show suggested trades placeholder
+    const canGenerateTrades = isBuy && ownerRoster && selectedRoster
+      && ownerRoster.roster_id !== selectedRoster.roster_id;
+
+    // ── 2. Positional comparison table (buy mode only) ──
+    if (canGenerateTrades) {
+      section.appendChild(renderPosCompareTable(ownerRoster, ownerName));
+    }
+
+    // ── 3. Suggested trades ──
     const sugSection = $('suggested-trades-section');
     sugSection.style.display = 'block';
-    sugSection.innerHTML = `
-      <div class="suggested-trades-title">
-        ${isBuy ? '🎯 Suggested Trade Packages to Acquire ' + name : '💰 Teams That Might Want ' + name}
-      </div>
-      <div class="suggested-trades-placeholder">
-        Trade suggestions are coming soon — we'll analyze every roster's needs and values to surface the best deals for you.
-      </div>
-    `;
+    sugSection.innerHTML = '';
+
+    if (canGenerateTrades) {
+      const trades = generateTargetTrades(pid, player, ownerRoster);
+      renderTargetTrades(sugSection, trades, pid, name, ownerName);
+    } else {
+      const titleEl = document.createElement('div');
+      titleEl.className = 'suggested-trades-title';
+      titleEl.innerHTML = isBuy ? `🎯 Suggested Trades to Acquire <strong>${name}</strong>` : `💰 Sell Suggestions`;
+      sugSection.appendChild(titleEl);
+
+      const ph = document.createElement('div');
+      ph.className = 'suggested-trades-placeholder';
+      ph.textContent = !selectedRoster
+        ? 'Select your team first to see trade suggestions.'
+        : ownerRoster?.roster_id === selectedRoster?.roster_id
+        ? 'You already own this player.'
+        : !isBuy
+        ? 'Sell suggestions coming soon.'
+        : 'This player is a free agent — add them directly.';
+      sugSection.appendChild(ph);
+    }
+  }
+
+  function renderPosCompareTable(partnerRoster, partnerName) {
+    const { rosters, playerData, users } = leagueData;
+    const userMap = {};
+    users.forEach(u => { userMap[u.user_id] = u; });
+    const myUser = userMap[selectedRoster.owner_id] || {};
+    const myName = (myUser.metadata?.team_name) || myUser.display_name || 'My Team';
+
+    const posData  = computeLeaguePosData(rosters, playerData);
+    const myZ      = posData.teamZ[selectedRoster.roster_id] || {};
+    const partnerZ = posData.teamZ[partnerRoster.roster_id]  || {};
+
+    const wrap = document.createElement('div');
+    wrap.className = 'pos-compare-wrap';
+
+    const title = document.createElement('div');
+    title.className = 'pos-compare-title';
+    title.textContent = 'Positional Strength Comparison';
+    wrap.appendChild(title);
+
+    const table = document.createElement('table');
+    table.className = 'pos-compare-table';
+
+    const thead = document.createElement('thead');
+    thead.innerHTML = `<tr>
+      <th>Position</th>
+      <th>${myName}</th>
+      <th>${partnerName}</th>
+    </tr>`;
+    table.appendChild(thead);
+
+    const tbody = document.createElement('tbody');
+    SKILL_POS.forEach(pos => {
+      const myTier      = strengthTierInfo(myZ[pos]?.z);
+      const partnerTier = strengthTierInfo(partnerZ[pos]?.z);
+      // Trade fit: they're strong where I'm weak → they can send me this pos
+      const isFit = partnerTier.rank >= 3 && myTier.rank <= 1;
+
+      const tr = document.createElement('tr');
+      if (isFit) tr.classList.add('pos-compare-fit');
+
+      const posTd = document.createElement('td');
+      posTd.innerHTML = `<span class="pos-chip" style="color:${POS_COLORS[pos]||'#aaa'};padding:0.1rem 0.3rem;">${pos}</span>`
+        + (isFit ? `<span class="trade-fit-tag">★ Trade fit</span>` : '');
+
+      const myTd = document.createElement('td');
+      const mySum = myZ[pos]?.sum;
+      myTd.innerHTML = `<span class="${myTier.cls}">${myTier.label}</span>`
+        + (mySum != null ? `<span class="pos-compare-sub">${fmtVal(Math.round(mySum))}</span>` : '');
+
+      const partTd = document.createElement('td');
+      const partSum = partnerZ[pos]?.sum;
+      partTd.innerHTML = `<span class="${partnerTier.cls}">${partnerTier.label}</span>`
+        + (partSum != null ? `<span class="pos-compare-sub">${fmtVal(Math.round(partSum))}</span>` : '');
+
+      tr.appendChild(posTd);
+      tr.appendChild(myTd);
+      tr.appendChild(partTd);
+      tbody.appendChild(tr);
+    });
+
+    table.appendChild(tbody);
+    wrap.appendChild(table);
+    return wrap;
+  }
+
+  function renderTargetTrades(container, trades, targetPid, targetName, partnerName) {
+    const titleEl = document.createElement('div');
+    titleEl.className = 'suggested-trades-title';
+    titleEl.innerHTML = `🎯 Suggested Trades to Acquire <strong>${targetName}</strong>`;
+    container.appendChild(titleEl);
+
+    if (!trades.length) {
+      const ph = document.createElement('div');
+      ph.className = 'target-no-trades';
+      ph.textContent = 'No balanced trade packages found within the 500-value tolerance. This player may be significantly over or under-valued relative to your current roster assets.';
+      container.appendChild(ph);
+      return;
+    }
+
+    const userMap = {};
+    leagueData.users.forEach(u => { userMap[u.user_id] = u; });
+    const myUser = userMap[selectedRoster.owner_id] || {};
+    const myName = (myUser.metadata?.team_name) || myUser.display_name || 'My Team';
+
+    const optLabels = ['Option 1', 'Option 2', 'Option 3'];
+
+    trades.forEach((trade, idx) => {
+      const myTotal   = trade.mySends.reduce((s, p) => s + p.val, 0);
+      const partTotal = trade.partnerSends.reduce((s, p) => s + p.val, 0);
+      const delta     = Math.abs(myTotal - partTotal);
+      const nMy   = trade.mySends.length;
+      const nPart = trade.partnerSends.length;
+      const structure = `${nMy}-for-${nPart}`;
+
+      const card = document.createElement('div');
+      card.className = 'target-trade-card';
+
+      const hdr = document.createElement('div');
+      hdr.className = 'target-trade-header';
+      hdr.innerHTML = `
+        <span class="target-trade-opt-label">${optLabels[idx] || 'Option'}</span>
+        <span class="target-trade-structure">${structure}</span>
+        <span class="target-trade-delta">Δ ${fmtVal(delta)} value</span>
+      `;
+      card.appendChild(hdr);
+
+      const body = document.createElement('div');
+      body.className = 'target-trade-body';
+
+      function makeCol(label, players) {
+        const col = document.createElement('div');
+        col.className = 'target-trade-col';
+
+        const lbl = document.createElement('div');
+        lbl.className = 'target-trade-col-label';
+        lbl.textContent = `${label} sends`;
+        col.appendChild(lbl);
+
+        players.forEach(p => {
+          const row = document.createElement('div');
+          row.className = 'target-trade-player-row' + (p.pid === targetPid ? ' is-target' : '');
+          const posColor = POS_COLORS[p.pos] || '#aaa';
+          row.innerHTML = `
+            <span class="pos-chip" style="color:${posColor};padding:0.1rem 0.28rem;font-size:0.68rem;">${p.pos}</span>
+            <span class="target-trade-player-name">${p.name}</span>
+            <span class="target-trade-player-val">${fmtVal(p.val)}</span>
+          `;
+          col.appendChild(row);
+        });
+
+        const total = document.createElement('div');
+        total.className = 'target-trade-total';
+        total.innerHTML = `Total: <strong>${fmtVal(players.reduce((s, p) => s + p.val, 0))}</strong>`;
+        col.appendChild(total);
+        return col;
+      }
+
+      const arrow = document.createElement('div');
+      arrow.className = 'target-trade-arrow';
+      arrow.textContent = '⇄';
+
+      body.appendChild(makeCol(myName, trade.mySends));
+      body.appendChild(arrow);
+      body.appendChild(makeCol(partnerName, trade.partnerSends));
+      card.appendChild(body);
+      container.appendChild(card);
+    });
   }
 
   // ── AI Trade Assistant ────────────────────────────────────────────────────────
