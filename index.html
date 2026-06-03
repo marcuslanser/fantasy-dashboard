@@ -2112,6 +2112,54 @@
       line-height: 1.6;
     }
 
+    /* ── Trade balance footer ───────────────────────────────────────────── */
+    .trade-balance {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+      padding: 0.65rem 1rem;
+      border-top: 1px solid var(--border);
+      background: rgba(255,255,255,0.01);
+      font-size: 0.8rem;
+    }
+
+    .trade-balance-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 0.18rem 0.55rem;
+      border-radius: 20px;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .trade-balance-badge.badge-deal { color: #22c55e; background: rgba(34,197,94,0.12);   border: 1px solid rgba(34,197,94,0.3); }
+    .trade-balance-badge.badge-fair { color: #94a3b8; background: rgba(148,163,184,0.08); border: 1px solid rgba(148,163,184,0.2); }
+    .trade-balance-badge.badge-over { color: #fbbf24; background: rgba(251,191,36,0.12);  border: 1px solid rgba(251,191,36,0.3); }
+
+    .trade-balance-detail {
+      color: var(--muted);
+      flex: 1;
+      min-width: 120px;
+    }
+
+    .trade-balance-detail strong { color: var(--text); }
+
+    .trade-balance-adj {
+      display: flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.75rem;
+      color: var(--muted);
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .trade-balance-adj .adj-you  { color: var(--accent2); font-weight: 700; }
+    .trade-balance-adj .adj-them { color: #22c55e;        font-weight: 700; }
+
     @media (max-width: 700px) {
       .hub-grid { grid-template-columns: 1fr; }
       .player-profile-card { gap: 1rem; }
@@ -2471,6 +2519,7 @@
 
 </div>
 
+<script src="tradeCalc.js"></script>
 <script>
   const SLEEPER = 'https://api.sleeper.app/v1';
 
@@ -5054,6 +5103,56 @@
       body.appendChild(arrow);
       body.appendChild(makeCol(partnerName, trade.partnerSends));
       card.appendChild(body);
+
+      // ── Trade balance footer (KTC-style raw adjustment) ──
+      if (typeof TradeCalc !== 'undefined') {
+        const sideAIn = trade.mySends.map(p => ({ name: p.name, ktcValue: p.val }));
+        const sideBIn = trade.partnerSends.map(p => ({ name: p.name, ktcValue: p.val }));
+        const ev = TradeCalc.evaluateTrade(sideAIn, sideBIn);
+
+        // sideA = what user sends, sideB = what user receives
+        // winningSide 'A' → user's sends have more adj → user overpays
+        // winningSide 'B' → partner's sends have more adj → user gets a deal
+        const balance = document.createElement('div');
+        balance.className = 'trade-balance';
+
+        const badge = document.createElement('span');
+        if (ev.winningSide === 'B') {
+          badge.className = 'trade-balance-badge badge-deal';
+          badge.textContent = '★ You win';
+        } else if (ev.winningSide === 'A') {
+          badge.className = 'trade-balance-badge badge-over';
+          badge.textContent = 'Overpaying';
+        } else {
+          badge.className = 'trade-balance-badge badge-fair';
+          badge.textContent = 'Fair';
+        }
+
+        const detail = document.createElement('span');
+        detail.className = 'trade-balance-detail';
+        if (ev.winningSide === 'A') {
+          detail.innerHTML = `You overpay — partner should add <strong>~${fmtVal(ev.equalizingPlayerValue)}</strong> to balance`;
+        } else if (ev.winningSide === 'B') {
+          detail.innerHTML = `You get value — add <strong>~${fmtVal(ev.equalizingPlayerValue)}</strong> to balance`;
+        } else {
+          detail.textContent = 'Balanced in adjusted value';
+        }
+
+        const adjNums = document.createElement('div');
+        adjNums.className = 'trade-balance-adj';
+        adjNums.innerHTML = `
+          Adj:
+          <span class="adj-you">${Math.round(ev.sideA.rawAdjTotal).toLocaleString()}</span>
+          <span>↔</span>
+          <span class="adj-them">${Math.round(ev.sideB.rawAdjTotal).toLocaleString()}</span>
+        `;
+
+        balance.appendChild(badge);
+        balance.appendChild(detail);
+        balance.appendChild(adjNums);
+        card.appendChild(balance);
+      }
+
       container.appendChild(card);
     });
   }
