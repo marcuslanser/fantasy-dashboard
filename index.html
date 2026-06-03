@@ -2104,6 +2104,37 @@
       padding-top: 1.75rem;
     }
 
+    /* Adjustment placeholder row */
+    .target-trade-player-row.is-adj-placeholder {
+      background: rgba(251,191,36,0.05);
+      border: 1px dashed rgba(251,191,36,0.38);
+    }
+
+    .adj-placeholder-icon {
+      font-size: 0.8rem;
+      color: #fbbf24;
+      font-weight: 800;
+      flex-shrink: 0;
+      width: 22px;
+      text-align: center;
+    }
+
+    .adj-placeholder-label {
+      flex: 1;
+      font-style: italic;
+      color: var(--muted);
+      font-size: 0.78rem;
+    }
+
+    .adj-placeholder-val {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: #fbbf24 !important;
+      flex-shrink: 0;
+    }
+
+    .target-trade-total-adj { color: #fbbf24; font-size: 0.75rem; }
+
     .target-no-trades {
       text-align: center;
       color: var(--muted);
@@ -5045,29 +5076,73 @@
     const optLabels = ['Option 1', 'Option 2', 'Option 3'];
 
     trades.forEach((trade, idx) => {
-      const myTotal   = trade.mySends.reduce((s, p) => s + p.val, 0);
-      const partTotal = trade.partnerSends.reduce((s, p) => s + p.val, 0);
-      const delta     = Math.abs(myTotal - partTotal);
-      const nMy   = trade.mySends.length;
-      const nPart = trade.partnerSends.length;
-      const structure = `${nMy}-for-${nPart}`;
+      // ── Evaluate trade balance before building UI ──
+      // sideA = user sends, sideB = partner sends (user receives)
+      // winningSide 'A' → user sends more raw adj → user overpays → partner needs adj placeholder
+      // winningSide 'B' → partner sends more raw adj → user gets a deal → user needs adj placeholder
+      const ev = typeof TradeCalc !== 'undefined'
+        ? TradeCalc.evaluateTrade(
+            trade.mySends.map(p => ({ name: p.name, ktcValue: p.val })),
+            trade.partnerSends.map(p => ({ name: p.name, ktcValue: p.val }))
+          )
+        : null;
+
+      const myAdjPlaceholder      = (ev && ev.winningSide === 'B') ? ev.equalizingPlayerValue : 0;
+      const partnerAdjPlaceholder = (ev && ev.winningSide === 'A') ? ev.equalizingPlayerValue : 0;
+
+      const myKtcTotal   = trade.mySends.reduce((s, p) => s + p.val, 0);
+      const partKtcTotal = trade.partnerSends.reduce((s, p) => s + p.val, 0);
+      const ktcDelta     = Math.abs(myKtcTotal - partKtcTotal);
+      const structure    = `${trade.mySends.length}-for-${trade.partnerSends.length}`;
 
       const card = document.createElement('div');
       card.className = 'target-trade-card';
 
+      // ── Header ──
       const hdr = document.createElement('div');
       hdr.className = 'target-trade-header';
-      hdr.innerHTML = `
-        <span class="target-trade-opt-label">${optLabels[idx] || 'Option'}</span>
-        <span class="target-trade-structure">${structure}</span>
-        <span class="target-trade-delta">Δ ${fmtVal(delta)} value</span>
-      `;
+
+      const optLabel = document.createElement('span');
+      optLabel.className = 'target-trade-opt-label';
+      optLabel.textContent = optLabels[idx] || 'Option';
+
+      const structBadge = document.createElement('span');
+      structBadge.className = 'target-trade-structure';
+      structBadge.textContent = structure;
+
+      const deltaSpan = document.createElement('span');
+      deltaSpan.className = 'target-trade-delta';
+      deltaSpan.textContent = `Δ ${fmtVal(ktcDelta)} KTC`;
+
+      // Adj balance badge in header
+      if (ev) {
+        const adjBadge = document.createElement('span');
+        if (ev.winningSide === 'B') {
+          adjBadge.className = 'trade-balance-badge badge-deal';
+          adjBadge.textContent = '★ You win';
+        } else if (ev.winningSide === 'A') {
+          adjBadge.className = 'trade-balance-badge badge-over';
+          adjBadge.textContent = 'Overpaying';
+        } else {
+          adjBadge.className = 'trade-balance-badge badge-fair';
+          adjBadge.textContent = 'Fair';
+        }
+        hdr.appendChild(optLabel);
+        hdr.appendChild(structBadge);
+        hdr.appendChild(adjBadge);
+        hdr.appendChild(deltaSpan);
+      } else {
+        hdr.appendChild(optLabel);
+        hdr.appendChild(structBadge);
+        hdr.appendChild(deltaSpan);
+      }
       card.appendChild(hdr);
 
+      // ── Trade body (two columns) ──
       const body = document.createElement('div');
       body.className = 'target-trade-body';
 
-      function makeCol(label, players) {
+      function makeCol(label, players, adjPlaceholder) {
         const col = document.createElement('div');
         col.className = 'target-trade-col';
 
@@ -5076,6 +5151,7 @@
         lbl.textContent = `${label} sends`;
         col.appendChild(lbl);
 
+        // Player rows
         players.forEach(p => {
           const row = document.createElement('div');
           row.className = 'target-trade-player-row' + (p.pid === targetPid ? ' is-target' : '');
@@ -5088,9 +5164,29 @@
           col.appendChild(row);
         });
 
+        // Adjustment placeholder row
+        if (adjPlaceholder > 0) {
+          const phRow = document.createElement('div');
+          phRow.className = 'target-trade-player-row is-adj-placeholder';
+          phRow.innerHTML = `
+            <span class="adj-placeholder-icon">+</span>
+            <span class="adj-placeholder-label">Value adjustment</span>
+            <span class="adj-placeholder-val">~${fmtVal(adjPlaceholder)}</span>
+          `;
+          col.appendChild(phRow);
+        }
+
+        // Total row
+        const ktcBase = players.reduce((s, p) => s + p.val, 0);
         const total = document.createElement('div');
         total.className = 'target-trade-total';
-        total.innerHTML = `Total: <strong>${fmtVal(players.reduce((s, p) => s + p.val, 0))}</strong>`;
+        if (adjPlaceholder > 0) {
+          total.innerHTML = `Total: <strong>${fmtVal(ktcBase)}</strong>`
+            + ` + <span class="target-trade-total-adj">~${fmtVal(adjPlaceholder)} adj</span>`
+            + ` = <strong>${fmtVal(ktcBase + adjPlaceholder)}</strong>`;
+        } else {
+          total.innerHTML = `Total: <strong>${fmtVal(ktcBase)}</strong>`;
+        }
         col.appendChild(total);
         return col;
       }
@@ -5099,58 +5195,25 @@
       arrow.className = 'target-trade-arrow';
       arrow.textContent = '⇄';
 
-      body.appendChild(makeCol(myName, trade.mySends));
+      body.appendChild(makeCol(myName,      trade.mySends,      myAdjPlaceholder));
       body.appendChild(arrow);
-      body.appendChild(makeCol(partnerName, trade.partnerSends));
+      body.appendChild(makeCol(partnerName, trade.partnerSends, partnerAdjPlaceholder));
       card.appendChild(body);
 
-      // ── Trade balance footer (KTC-style raw adjustment) ──
-      if (typeof TradeCalc !== 'undefined') {
-        const sideAIn = trade.mySends.map(p => ({ name: p.name, ktcValue: p.val }));
-        const sideBIn = trade.partnerSends.map(p => ({ name: p.name, ktcValue: p.val }));
-        const ev = TradeCalc.evaluateTrade(sideAIn, sideBIn);
-
-        // sideA = what user sends, sideB = what user receives
-        // winningSide 'A' → user's sends have more adj → user overpays
-        // winningSide 'B' → partner's sends have more adj → user gets a deal
-        const balance = document.createElement('div');
-        balance.className = 'trade-balance';
-
-        const badge = document.createElement('span');
-        if (ev.winningSide === 'B') {
-          badge.className = 'trade-balance-badge badge-deal';
-          badge.textContent = '★ You win';
-        } else if (ev.winningSide === 'A') {
-          badge.className = 'trade-balance-badge badge-over';
-          badge.textContent = 'Overpaying';
-        } else {
-          badge.className = 'trade-balance-badge badge-fair';
-          badge.textContent = 'Fair';
-        }
-
-        const detail = document.createElement('span');
-        detail.className = 'trade-balance-detail';
-        if (ev.winningSide === 'A') {
-          detail.innerHTML = `You overpay — partner should add <strong>~${fmtVal(ev.equalizingPlayerValue)}</strong> to balance`;
-        } else if (ev.winningSide === 'B') {
-          detail.innerHTML = `You get value — add <strong>~${fmtVal(ev.equalizingPlayerValue)}</strong> to balance`;
-        } else {
-          detail.textContent = 'Balanced in adjusted value';
-        }
-
-        const adjNums = document.createElement('div');
-        adjNums.className = 'trade-balance-adj';
-        adjNums.innerHTML = `
-          Adj:
+      // ── Slim footer: raw adj numbers only ──
+      if (ev) {
+        const footer = document.createElement('div');
+        footer.className = 'trade-balance';
+        footer.innerHTML = `
+          <span style="font-size:0.73rem;color:var(--muted)">Raw adj:</span>
           <span class="adj-you">${Math.round(ev.sideA.rawAdjTotal).toLocaleString()}</span>
-          <span>↔</span>
+          <span style="color:var(--muted)">↔</span>
           <span class="adj-them">${Math.round(ev.sideB.rawAdjTotal).toLocaleString()}</span>
+          <span style="font-size:0.7rem;color:var(--muted);margin-left:auto">
+            deficit: ${Math.round(ev.deficit).toLocaleString()}
+          </span>
         `;
-
-        balance.appendChild(badge);
-        balance.appendChild(detail);
-        balance.appendChild(adjNums);
-        card.appendChild(balance);
+        card.appendChild(footer);
       }
 
       container.appendChild(card);
