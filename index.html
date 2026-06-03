@@ -1545,6 +1545,532 @@
       .tx-stat-card { min-width: 100px; padding: 0.75rem 0.9rem; }
       .teams-grid { grid-template-columns: 1fr; }
     }
+
+    /* ── Hub / Landing page ─────────────────────────────────────────────── */
+    #hub { display: none; }
+
+    .hub-welcome {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .hub-welcome-league {
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.3rem;
+    }
+
+    .hub-welcome-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .hub-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.25rem;
+    }
+
+    .hub-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 2rem 1.75rem;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+      user-select: none;
+    }
+
+    .hub-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+
+    .hub-card:hover { transform: translateY(-2px); }
+    .hub-card:hover::before { opacity: 1; }
+
+    .hub-card:hover        { border-color: var(--accent);  box-shadow: 0 0 0 1px rgba(140,92,246,0.15), 0 8px 30px rgba(0,0,0,0.3); }
+    .hub-card.hub-buy:hover  { border-color: #22c55e;         box-shadow: 0 0 0 1px rgba(34,197,94,0.15),  0 8px 30px rgba(0,0,0,0.3); }
+    .hub-card.hub-sell:hover { border-color: #f87171;         box-shadow: 0 0 0 1px rgba(248,113,113,0.15),0 8px 30px rgba(0,0,0,0.3); }
+    .hub-card.hub-ai:hover   { border-color: var(--accent2); box-shadow: 0 0 0 1px rgba(92,138,255,0.15), 0 8px 30px rgba(0,0,0,0.3); }
+
+    .hub-card::before        { background: var(--accent); }
+    .hub-card.hub-buy::before  { background: #22c55e; }
+    .hub-card.hub-sell::before { background: #f87171; }
+    .hub-card.hub-ai::before   { background: var(--accent2); }
+
+    .hub-card-icon { font-size: 2.4rem; line-height: 1; }
+
+    .hub-card-title {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .hub-card-desc {
+      font-size: 0.85rem;
+      color: var(--muted);
+      line-height: 1.55;
+      flex: 1;
+    }
+
+    .hub-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      transition: color 0.15s, gap 0.15s;
+    }
+
+    .hub-card:hover        .hub-card-cta { color: var(--accent);  gap: 0.5rem; }
+    .hub-card.hub-buy:hover  .hub-card-cta { color: #22c55e; }
+    .hub-card.hub-sell:hover .hub-card-cta { color: #f87171; }
+    .hub-card.hub-ai:hover   .hub-card-cta { color: var(--accent2); }
+
+    /* ── Page wrapper ───────────────────────────────────────────────────── */
+    #page-wrapper { display: none; }
+
+    .page-header {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--border);
+      flex-wrap: wrap;
+    }
+
+    .page-back-btn {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 0.45rem 0.9rem;
+      font-size: 0.83rem;
+      cursor: pointer;
+      transition: background 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .page-back-btn:hover { background: rgba(255,255,255,0.1); }
+
+    .page-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      flex: 1;
+    }
+
+    .page-title.buy-title  { color: #22c55e; }
+    .page-title.sell-title { color: #f87171; }
+    .page-title.ai-title   { color: var(--accent2); }
+
+    .page-content { display: none; }
+
+    /* Mode toggle */
+    .mode-toggle {
+      display: none;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+
+    .mode-toggle-btn {
+      padding: 0.45rem 1rem;
+      font-size: 0.82rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      background: none;
+      color: var(--muted);
+      transition: background 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .mode-toggle-btn.active-buy  { background: rgba(34,197,94,0.18);   color: #22c55e; }
+    .mode-toggle-btn.active-sell { background: rgba(248,113,113,0.18); color: #f87171; }
+
+    /* ── Player search tool ─────────────────────────────────────────────── */
+    .player-tool-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .player-search-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+    }
+
+    .player-search-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 0.65rem;
+    }
+
+    .player-search-bar { position: relative; }
+
+    .player-search-input {
+      width: 100%;
+      padding: 0.8rem 1rem;
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .player-search-input::placeholder { color: var(--muted); }
+    .player-search-input.buy-mode:focus  { border-color: #22c55e; }
+    .player-search-input.sell-mode:focus { border-color: #f87171; }
+
+    .player-search-results {
+      position: absolute;
+      top: calc(100% + 4px);
+      left: 0; right: 0;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      max-height: 300px;
+      overflow-y: auto;
+      z-index: 100;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+      display: none;
+    }
+
+    .player-result-item {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      padding: 0.65rem 1rem;
+      cursor: pointer;
+      transition: background 0.1s;
+      border-bottom: 1px solid rgba(46,50,80,0.4);
+    }
+
+    .player-result-item:last-child { border-bottom: none; }
+    .player-result-item:hover { background: var(--surface2); }
+
+    .player-result-name {
+      font-weight: 600;
+      font-size: 0.88rem;
+      flex: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .player-result-team { font-size: 0.78rem; color: var(--muted); white-space: nowrap; }
+
+    .player-result-val {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: var(--accent);
+      white-space: nowrap;
+      min-width: 38px;
+      text-align: right;
+    }
+
+    /* Player profile */
+    .player-profile-section { display: none; }
+
+    .player-profile-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+
+    .player-profile-card.buy-card  { border-color: rgba(34,197,94,0.4);   background: rgba(34,197,94,0.03); }
+    .player-profile-card.sell-card { border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.03); }
+
+    .player-pos-icon {
+      width: 68px; height: 68px;
+      border-radius: 14px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.4rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .player-pos-icon.buy-icon  { background: rgba(34,197,94,0.15);   color: #22c55e;  border: 2px solid rgba(34,197,94,0.3); }
+    .player-pos-icon.sell-icon { background: rgba(248,113,113,0.15); color: #f87171;  border: 2px solid rgba(248,113,113,0.3); }
+
+    .player-profile-info { flex: 1; min-width: 220px; }
+
+    .player-profile-name { font-size: 1.5rem; font-weight: 700; margin-bottom: 0.4rem; }
+
+    .player-profile-meta { display: flex; flex-wrap: wrap; gap: 0.45rem; margin-bottom: 1rem; }
+
+    .player-profile-stats { display: flex; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 0.75rem; }
+
+    .player-stat-box { display: flex; flex-direction: column; gap: 0.2rem; }
+
+    .player-stat-label {
+      font-size: 0.7rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--muted);
+    }
+
+    .player-stat-value { font-size: 1.25rem; font-weight: 700; }
+    .player-stat-value.buy-val  { color: #22c55e; }
+    .player-stat-value.sell-val { color: #f87171; }
+    .player-stat-value.blue-val { color: var(--accent2); }
+
+    .player-owned-row {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-size: 0.83rem;
+      color: var(--muted);
+      margin-top: 0.25rem;
+      flex-wrap: wrap;
+    }
+
+    .player-owned-name { font-weight: 600; color: var(--text); }
+
+    /* Suggested trades */
+    .suggested-trades-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      display: none;
+    }
+
+    .suggested-trades-title {
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 1.25rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .suggested-trades-placeholder {
+      text-align: center;
+      color: var(--muted);
+      padding: 2.5rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    /* ── AI Trade Assistant ─────────────────────────────────────────────── */
+    .ai-trade-wrap { display: flex; flex-direction: column; gap: 1.5rem; }
+
+    .ai-team-select-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.25rem 1.5rem;
+    }
+
+    .ai-section-label {
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.07em;
+      color: var(--muted);
+      margin-bottom: 0.85rem;
+    }
+
+    .ai-trades-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 1.5rem;
+      min-height: 180px;
+    }
+
+    .ai-trades-placeholder {
+      text-align: center;
+      color: var(--muted);
+      padding: 2.5rem 1rem;
+      font-size: 0.9rem;
+      line-height: 1.7;
+    }
+
+    .ai-trades-placeholder strong {
+      display: block;
+      font-size: 1rem;
+      margin-bottom: 0.5rem;
+      color: var(--text);
+    }
+
+    @media (max-width: 700px) {
+      .hub-grid { grid-template-columns: 1fr; }
+      .player-profile-card { gap: 1rem; }
+      .page-header { gap: 0.6rem; }
+      .team-picker-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    /* ── Team picker ────────────────────────────────────────────────────── */
+    #team-picker { display: none; max-width: 860px; margin: 0 auto; padding: 0.5rem 0 2rem; }
+
+    .team-picker-header {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+
+    .team-picker-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+      margin-bottom: 0.4rem;
+    }
+
+    .team-picker-sub {
+      font-size: 0.88rem;
+      color: var(--muted);
+    }
+
+    .team-picker-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(190px, 1fr));
+      gap: 0.9rem;
+    }
+
+    .team-picker-card {
+      background: var(--surface);
+      border: 2px solid var(--border);
+      border-radius: 12px;
+      padding: 1.25rem 1rem;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s, transform 0.15s;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      text-align: center;
+    }
+
+    .team-picker-card:hover {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 1px rgba(140,92,246,0.2), 0 6px 20px rgba(0,0,0,0.3);
+      transform: translateY(-2px);
+    }
+
+    /* Override avatar size inside picker */
+    .team-picker-card .owner-avatar,
+    .team-picker-card .owner-avatar-placeholder {
+      width: 52px;
+      height: 52px;
+      font-size: 1.1rem;
+      border-radius: 50%;
+    }
+
+    .team-picker-name {
+      font-weight: 700;
+      font-size: 0.92rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      width: 100%;
+    }
+
+    .team-picker-owner {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .team-picker-record { font-size: 0.82rem; font-variant-numeric: tabular-nums; }
+    .team-picker-record .w { color: var(--win); font-weight: 600; }
+    .team-picker-record .l { color: var(--loss); }
+
+    /* ── My team bar ────────────────────────────────────────────────────── */
+    #my-team-bar { display: none; margin-bottom: 1.5rem; }
+
+    .my-team-bar-inner {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      padding: 0.6rem 1rem;
+      flex-wrap: wrap;
+    }
+
+    .my-team-bar-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--accent);
+      flex-shrink: 0;
+    }
+
+    .my-team-bar-divider {
+      width: 1px;
+      height: 16px;
+      background: var(--border);
+      flex-shrink: 0;
+    }
+
+    .my-team-bar-info {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex: 1;
+      min-width: 0;
+    }
+
+    .my-team-bar-name {
+      font-weight: 700;
+      font-size: 0.9rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .my-team-bar-record {
+      font-size: 0.82rem;
+      font-variant-numeric: tabular-nums;
+      white-space: nowrap;
+      flex-shrink: 0;
+      color: var(--muted);
+    }
+
+    .my-team-bar-change {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      border-radius: 6px;
+      padding: 0.28rem 0.65rem;
+      font-size: 0.76rem;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+
+    .my-team-bar-change:hover { border-color: var(--accent); color: var(--accent); }
   </style>
 </head>
 <body>
@@ -1569,79 +2095,191 @@
 </div>
 
 <div id="dashboard">
-  <nav class="tab-bar">
-    <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
-    <button class="tab-btn" data-tab="transactions" onclick="switchTab('transactions')">Transactions</button>
-    <button class="tab-btn" data-tab="teams" onclick="switchTab('teams')">Teams</button>
-    <button class="tab-btn" data-tab="roster" onclick="switchTab('roster')">Roster</button>
-    <button class="tab-btn" data-tab="trade" onclick="switchTab('trade')">Trade</button>
-  </nav>
 
-  <!-- Overview tab -->
-  <div id="tab-overview" class="tab-panel active">
-    <div id="league-info-section"></div>
+  <!-- ── My team bar (persistent once team is selected) ───────────────── -->
+  <div id="my-team-bar">
+    <div class="my-team-bar-inner" id="my-team-bar-inner"></div>
+  </div>
 
-    <div class="two-col">
-      <div>
-        <div class="section-title">Standings</div>
-        <div class="card" id="standings-card"></div>
+  <!-- ── Team picker (shown once after league loads) ───────────────────── -->
+  <div id="team-picker">
+    <div class="team-picker-header">
+      <div class="team-picker-title">Which team are you?</div>
+      <div class="team-picker-sub">Select your team so we can personalise trade recommendations for you.</div>
+    </div>
+    <div class="team-picker-grid" id="team-picker-grid"></div>
+  </div>
+
+  <!-- ── Hub / tool selector ─────────────────────────────────────────── -->
+  <div id="hub">
+    <div class="hub-welcome">
+      <div class="hub-welcome-league" id="hub-league-name"></div>
+      <div class="hub-welcome-sub">Choose a tool to get started</div>
+    </div>
+
+    <div class="hub-grid">
+      <div class="hub-card" onclick="showPage('overview')">
+        <div class="hub-card-icon">📊</div>
+        <div class="hub-card-title">League Overview</div>
+        <div class="hub-card-desc">Standings, matchups, transactions, team rosters, draft picks, and trade history — all in one place.</div>
+        <div class="hub-card-cta">Open <span>→</span></div>
       </div>
-      <div>
-        <div class="section-title" id="matchup-week-label">Current Week Matchups</div>
-        <div id="matchup-list" class="matchup-list"></div>
+
+      <div class="hub-card hub-buy" onclick="showPage('target')">
+        <div class="hub-card-icon">🎯</div>
+        <div class="hub-card-title">Target a Player</div>
+        <div class="hub-card-desc">Find the best trade packages to acquire a player you want. We'll match you with teams that can deal.</div>
+        <div class="hub-card-cta">Find trades <span>→</span></div>
+      </div>
+
+      <div class="hub-card hub-sell" onclick="showPage('sell')">
+        <div class="hub-card-icon">💰</div>
+        <div class="hub-card-title">Sell a Player</div>
+        <div class="hub-card-desc">Identify teams that need your player and build trade offers to maximize return value.</div>
+        <div class="hub-card-cta">Find buyers <span>→</span></div>
+      </div>
+
+      <div class="hub-card hub-ai" onclick="showPage('ai-trade')">
+        <div class="hub-card-icon">🤖</div>
+        <div class="hub-card-title">AI Trade Assistant</div>
+        <div class="hub-card-desc">Get personalized trade recommendations based on your roster needs, positional gaps, and league dynamics.</div>
+        <div class="hub-card-cta">Get recommendations <span>→</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Page wrapper (shown when a tool is active) ───────────────────── -->
+  <div id="page-wrapper">
+    <div class="page-header">
+      <button class="page-back-btn" onclick="showHub()">← Home</button>
+      <div class="page-title" id="page-title-text">League Overview</div>
+      <div class="mode-toggle" id="mode-toggle">
+        <button class="mode-toggle-btn" id="toggle-buy-btn" onclick="setPlayerMode('buy')">🎯 Target</button>
+        <button class="mode-toggle-btn" id="toggle-sell-btn" onclick="setPlayerMode('sell')">💰 Sell</button>
       </div>
     </div>
 
-    <div>
-      <div class="section-title">League Members</div>
-      <div class="card" id="members-section"></div>
+    <!-- League Overview page (existing tabs) -->
+    <div id="page-overview" class="page-content">
+      <nav class="tab-bar">
+        <button class="tab-btn active" data-tab="overview" onclick="switchTab('overview')">Overview</button>
+        <button class="tab-btn" data-tab="transactions" onclick="switchTab('transactions')">Transactions</button>
+        <button class="tab-btn" data-tab="teams" onclick="switchTab('teams')">Teams</button>
+        <button class="tab-btn" data-tab="roster" onclick="switchTab('roster')">Roster</button>
+        <button class="tab-btn" data-tab="trade" onclick="switchTab('trade')">Trade</button>
+      </nav>
+
+      <!-- Overview tab -->
+      <div id="tab-overview" class="tab-panel active">
+        <div id="league-info-section"></div>
+
+        <div class="two-col">
+          <div>
+            <div class="section-title">Standings</div>
+            <div class="card" id="standings-card"></div>
+          </div>
+          <div>
+            <div class="section-title" id="matchup-week-label">Current Week Matchups</div>
+            <div id="matchup-list" class="matchup-list"></div>
+          </div>
+        </div>
+
+        <div>
+          <div class="section-title">League Members</div>
+          <div class="card" id="members-section"></div>
+        </div>
+      </div>
+
+      <!-- Transactions tab -->
+      <div id="tab-transactions" class="tab-panel">
+        <div id="tx-summary-bar" class="tx-summary-bar"></div>
+        <div class="tx-legend">
+          <span class="tx-legend-item"><span class="tx-type-pip pip-trade"></span> Trades</span>
+          <span class="tx-legend-item"><span class="tx-type-pip pip-waiver"></span> Waiver Pickups</span>
+          <span class="tx-legend-item"><span class="tx-type-pip pip-fa"></span> FA Pickups</span>
+          <span class="tx-legend-item"><span class="tx-type-pip pip-drop"></span> Drops</span>
+        </div>
+        <div class="tx-table-wrap">
+          <table class="tx-table" id="tx-table">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Team</th>
+                <th title="Completed trades">Trades</th>
+                <th title="Waiver wire pickups">Waiver</th>
+                <th title="Free agent pickups">FA Picks</th>
+                <th title="Drops (non-trade)">Drops</th>
+                <th title="Total roster moves excluding trades">Total Moves</th>
+              </tr>
+            </thead>
+            <tbody id="tx-tbody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Teams tab -->
+      <div id="tab-teams" class="tab-panel">
+        <div id="teams-grid" class="teams-grid"></div>
+      </div>
+
+      <!-- Roster tab -->
+      <div id="tab-roster" class="tab-panel">
+        <div id="roster-team-bar" class="roster-team-bar"></div>
+        <div id="roster-content">
+          <div class="roster-placeholder">Select a team above to view their roster.</div>
+        </div>
+      </div>
+
+      <!-- Trade tab -->
+      <div id="tab-trade" class="tab-panel">
+        <div id="trade-content"></div>
+      </div>
+    </div>
+
+    <!-- Target / Sell a Player page -->
+    <div id="page-player-tool" class="page-content">
+      <div class="player-tool-wrap">
+        <div class="player-search-section">
+          <div class="player-search-label" id="player-search-label">Search for a player</div>
+          <div class="player-search-bar">
+            <input
+              id="player-search-input"
+              class="player-search-input buy-mode"
+              type="text"
+              placeholder="Search players…"
+              autocomplete="off"
+              oninput="onPlayerSearchInput(this.value)"
+            />
+            <div id="player-search-results" class="player-search-results"></div>
+          </div>
+        </div>
+
+        <div id="player-profile-section" class="player-profile-section"></div>
+
+        <div id="suggested-trades-section" class="suggested-trades-section"></div>
+      </div>
+    </div>
+
+    <!-- AI Trade Assistant page -->
+    <div id="page-ai-trade" class="page-content">
+      <div class="ai-trade-wrap">
+        <div class="ai-team-select-section">
+          <div class="ai-section-label">Select Your Team</div>
+          <div id="ai-team-bar" class="roster-team-bar"></div>
+        </div>
+        <div class="ai-trades-section">
+          <div class="ai-section-label">Trade Suggestions</div>
+          <div id="ai-trades-content">
+            <div class="ai-trades-placeholder">
+              <strong>Select your team above to get started</strong>
+              AI-powered trade suggestions will analyze your roster, positional needs, dynasty values, and league dynamics to surface the best available trades.
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
-  <!-- Transactions tab -->
-  <div id="tab-transactions" class="tab-panel">
-    <div id="tx-summary-bar" class="tx-summary-bar"></div>
-    <div class="tx-legend">
-      <span class="tx-legend-item"><span class="tx-type-pip pip-trade"></span> Trades</span>
-      <span class="tx-legend-item"><span class="tx-type-pip pip-waiver"></span> Waiver Pickups</span>
-      <span class="tx-legend-item"><span class="tx-type-pip pip-fa"></span> FA Pickups</span>
-      <span class="tx-legend-item"><span class="tx-type-pip pip-drop"></span> Drops</span>
-    </div>
-    <div class="tx-table-wrap">
-      <table class="tx-table" id="tx-table">
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Team</th>
-            <th title="Completed trades">Trades</th>
-            <th title="Waiver wire pickups">Waiver</th>
-            <th title="Free agent pickups">FA Picks</th>
-            <th title="Drops (non-trade)">Drops</th>
-            <th title="Total roster moves excluding trades">Total Moves</th>
-          </tr>
-        </thead>
-        <tbody id="tx-tbody"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <!-- Teams tab -->
-  <div id="tab-teams" class="tab-panel">
-    <div id="teams-grid" class="teams-grid"></div>
-  </div>
-
-  <!-- Roster tab -->
-  <div id="tab-roster" class="tab-panel">
-    <div id="roster-team-bar" class="roster-team-bar"></div>
-    <div id="roster-content">
-      <div class="roster-placeholder">Select a team above to view their roster.</div>
-    </div>
-  </div>
-
-  <!-- Trade tab -->
-  <div id="tab-trade" class="tab-panel">
-    <div id="trade-content"></div>
-  </div>
 </div>
 
 <script>
@@ -1649,8 +2287,9 @@
 
   const $ = id => document.getElementById(id);
 
-  let leagueData = null;   // populated after a successful league load
-  let weekDataCache = {};  // { "season-week-type": { player_id: statsObj } }
+  let leagueData = null;     // populated after a successful league load
+  let selectedRoster = null; // the team the user identified as their own
+  let weekDataCache = {};    // { "season-week-type": { player_id: statsObj } }
 
   // ── Tab navigation ──────────────────────────────────────────────────────────
 
@@ -1777,7 +2416,9 @@
       renderTrades(rosters, users, playerData, tradedPicks, drafts, league);
       renderRosterTab(rosters, users);
 
+      selectedRoster = null;
       $('dashboard').style.display = 'block';
+      showTeamPicker();
     } catch (err) {
       console.error(err);
       showError('Could not load league. Check the ID and try again.');
@@ -3497,7 +4138,480 @@
     }
   }
 
+  // ── Navigation ───────────────────────────────────────────────────────────────
+
+  let currentPlayerMode = 'buy';
+
+  // ── Team picker ──────────────────────────────────────────────────────────────
+
+  function showTeamPicker() {
+    $('my-team-bar').style.display = 'none';
+    $('team-picker').style.display = 'block';
+    $('hub').style.display = 'none';
+    $('page-wrapper').style.display = 'none';
+    renderTeamPicker();
+  }
+
+  function renderTeamPicker() {
+    if (!leagueData) return;
+    const { rosters, users } = leagueData;
+    const userMap = {};
+    users.forEach(u => { userMap[u.user_id] = u; });
+
+    const sorted = [...rosters].sort((a, b) => {
+      const aw = a.settings?.wins ?? 0, bw = b.settings?.wins ?? 0;
+      const al = a.settings?.losses ?? 0, bl = b.settings?.losses ?? 0;
+      if (bw !== aw) return bw - aw;
+      if (al !== bl) return al - bl;
+      return (b.settings?.fpts ?? 0) - (a.settings?.fpts ?? 0);
+    });
+
+    const grid = $('team-picker-grid');
+    grid.innerHTML = '';
+
+    sorted.forEach(roster => {
+      const user = userMap[roster.owner_id] || {};
+      const teamName = (user.metadata?.team_name) || user.display_name || 'Unknown';
+      const wins   = roster.settings?.wins   ?? 0;
+      const losses = roster.settings?.losses ?? 0;
+
+      const card = document.createElement('div');
+      card.className = 'team-picker-card';
+
+      card.appendChild(avatarEl(user.avatar, user.display_name, 'owner'));
+
+      const nameEl = document.createElement('div');
+      nameEl.className = 'team-picker-name';
+      nameEl.title = teamName;
+      nameEl.textContent = teamName;
+
+      const ownerEl = document.createElement('div');
+      ownerEl.className = 'team-picker-owner';
+      ownerEl.textContent = '@' + (user.username || user.display_name || '?');
+
+      const recEl = document.createElement('div');
+      recEl.className = 'team-picker-record';
+      recEl.innerHTML = `<span class="w">${wins}</span>-<span class="l">${losses}</span>`;
+
+      card.appendChild(nameEl);
+      card.appendChild(ownerEl);
+      card.appendChild(recEl);
+
+      card.addEventListener('click', () => selectMyTeam(roster));
+      grid.appendChild(card);
+    });
+  }
+
+  function selectMyTeam(roster) {
+    selectedRoster = roster;
+    $('team-picker').style.display = 'none';
+    updateMyTeamBar();
+    showHub();
+  }
+
+  function updateMyTeamBar() {
+    if (!selectedRoster || !leagueData) return;
+
+    const userMap = {};
+    leagueData.users.forEach(u => { userMap[u.user_id] = u; });
+    const user     = userMap[selectedRoster.owner_id] || {};
+    const teamName = (user.metadata?.team_name) || user.display_name || 'Unknown';
+    const wins     = selectedRoster.settings?.wins   ?? 0;
+    const losses   = selectedRoster.settings?.losses ?? 0;
+
+    const inner = $('my-team-bar-inner');
+    inner.innerHTML = '';
+
+    const label = document.createElement('span');
+    label.className = 'my-team-bar-label';
+    label.textContent = 'My Team';
+
+    const divider = document.createElement('div');
+    divider.className = 'my-team-bar-divider';
+
+    const info = document.createElement('div');
+    info.className = 'my-team-bar-info';
+    info.appendChild(avatarEl(user.avatar, user.display_name, 'owner'));
+
+    const nameEl = document.createElement('span');
+    nameEl.className = 'my-team-bar-name';
+    nameEl.textContent = teamName;
+
+    const recEl = document.createElement('span');
+    recEl.className = 'my-team-bar-record';
+    recEl.innerHTML = `<span style="color:var(--win)">${wins}</span>-<span style="color:var(--loss)">${losses}</span>`;
+
+    info.appendChild(nameEl);
+    info.appendChild(recEl);
+
+    const changeBtn = document.createElement('button');
+    changeBtn.className = 'my-team-bar-change';
+    changeBtn.textContent = 'Change team';
+    changeBtn.addEventListener('click', showTeamPicker);
+
+    inner.appendChild(label);
+    inner.appendChild(divider);
+    inner.appendChild(info);
+    inner.appendChild(changeBtn);
+
+    $('my-team-bar').style.display = 'block';
+  }
+
+  function showHub() {
+    $('team-picker').style.display = 'none';
+    $('hub').style.display = 'block';
+    $('page-wrapper').style.display = 'none';
+
+    if (leagueData) {
+      $('hub-league-name').textContent = leagueData.league.name || 'Your League';
+    }
+  }
+
+  function showPage(name) {
+    $('hub').style.display = 'none';
+    $('page-wrapper').style.display = 'block';
+
+    // Hide all page contents and mode toggle
+    document.querySelectorAll('.page-content').forEach(p => p.style.display = 'none');
+    $('mode-toggle').style.display = 'none';
+
+    if (name === 'overview') {
+      $('page-title-text').textContent = 'League Overview';
+      $('page-title-text').className = 'page-title';
+      $('page-overview').style.display = 'block';
+      // Reset to overview sub-tab
+      document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.tab === 'overview');
+      });
+      document.querySelectorAll('.tab-panel').forEach(panel => {
+        panel.classList.toggle('active', panel.id === 'tab-overview');
+      });
+
+    } else if (name === 'target') {
+      currentPlayerMode = 'buy';
+      $('page-player-tool').style.display = 'block';
+      $('mode-toggle').style.display = 'flex';
+      applyPlayerMode();
+
+    } else if (name === 'sell') {
+      currentPlayerMode = 'sell';
+      $('page-player-tool').style.display = 'block';
+      $('mode-toggle').style.display = 'flex';
+      applyPlayerMode();
+
+    } else if (name === 'ai-trade') {
+      $('page-title-text').textContent = 'AI Trade Assistant';
+      $('page-title-text').className = 'page-title ai-title';
+      $('page-ai-trade').style.display = 'block';
+      renderAITradeTeamSelect();
+    }
+  }
+
+  function setPlayerMode(mode) {
+    currentPlayerMode = mode;
+    applyPlayerMode();
+    clearPlayerSearch();
+  }
+
+  function applyPlayerMode() {
+    const isBuy = currentPlayerMode === 'buy';
+
+    $('page-title-text').textContent = isBuy ? 'Target a Player' : 'Sell a Player';
+    $('page-title-text').className   = `page-title ${isBuy ? 'buy-title' : 'sell-title'}`;
+
+    $('toggle-buy-btn').className  = `mode-toggle-btn${isBuy  ? ' active-buy'  : ''}`;
+    $('toggle-sell-btn').className = `mode-toggle-btn${!isBuy ? ' active-sell' : ''}`;
+
+    const searchInput = $('player-search-input');
+    searchInput.placeholder = isBuy
+      ? 'Search for a player you want to acquire…'
+      : 'Search for a player on your roster to sell…';
+    searchInput.className = `player-search-input ${isBuy ? 'buy-mode' : 'sell-mode'}`;
+
+    $('player-search-label').textContent = isBuy
+      ? 'Which player do you want to target?'
+      : 'Which player do you want to sell?';
+  }
+
+  // ── Player search ─────────────────────────────────────────────────────────────
+
+  function clearPlayerSearch() {
+    $('player-search-input').value = '';
+    $('player-search-results').style.display = 'none';
+    $('player-profile-section').style.display = 'none';
+    $('suggested-trades-section').style.display = 'none';
+  }
+
+  function onPlayerSearchInput(query) {
+    if (!leagueData || !query || query.length < 2) {
+      $('player-search-results').style.display = 'none';
+      return;
+    }
+
+    const { playerData, rosters } = leagueData;
+    const q = query.toLowerCase();
+
+    // For sell mode, limit to players on any league roster
+    const leaguePlayerSet = new Set();
+    rosters.forEach(r => (r.players || []).forEach(id => leaguePlayerSet.add(id)));
+
+    const SKILL_POS = new Set(['QB', 'RB', 'WR', 'TE']);
+    const matches = [];
+
+    for (const [pid, player] of Object.entries(playerData)) {
+      if (currentPlayerMode === 'sell' && !leaguePlayerSet.has(pid)) continue;
+
+      const fullName = `${player.first_name || ''} ${player.last_name || ''}`.trim();
+      if (!fullName.toLowerCase().includes(q)) continue;
+
+      const pos = player.fantasy_positions?.[0] || player.position || '';
+      if (!SKILL_POS.has(pos)) continue;
+
+      matches.push({
+        pid,
+        player,
+        name: fullName,
+        pos,
+        val: DYNASTY_VALUES[pid] ?? 0,
+      });
+    }
+
+    matches.sort((a, b) => b.val - a.val);
+
+    const resultsEl = $('player-search-results');
+    resultsEl.innerHTML = '';
+
+    const top = matches.slice(0, 18);
+    if (top.length === 0) {
+      resultsEl.innerHTML = '<div class="player-result-item"><span class="player-result-team">No players found</span></div>';
+    } else {
+      top.forEach(m => {
+        const item = document.createElement('div');
+        item.className = 'player-result-item';
+
+        const posChip = document.createElement('span');
+        posChip.className = 'pos-chip';
+        posChip.style.color = POS_COLORS[m.pos] || '#aaa';
+        posChip.textContent = m.pos;
+
+        const nameEl = document.createElement('span');
+        nameEl.className = 'player-result-name';
+        nameEl.textContent = m.name;
+
+        const teamEl = document.createElement('span');
+        teamEl.className = 'player-result-team';
+        teamEl.textContent = m.player.team || 'FA';
+
+        const valEl = document.createElement('span');
+        valEl.className = 'player-result-val';
+        valEl.textContent = fmtVal(m.val);
+
+        item.appendChild(posChip);
+        item.appendChild(nameEl);
+        item.appendChild(teamEl);
+        item.appendChild(valEl);
+        item.addEventListener('click', () => selectPlayer(m.pid, m.player));
+        resultsEl.appendChild(item);
+      });
+    }
+
+    resultsEl.style.display = 'block';
+  }
+
+  function selectPlayer(pid, player) {
+    $('player-search-results').style.display = 'none';
+    $('player-search-input').value = `${player.first_name || ''} ${player.last_name || ''}`.trim();
+    renderPlayerProfile(pid, player);
+  }
+
+  function renderPlayerProfile(pid, player) {
+    const isBuy = currentPlayerMode === 'buy';
+    const pos     = player.fantasy_positions?.[0] || player.position || '?';
+    const dynVal  = DYNASTY_VALUES[pid];
+    const rdraftVal = DYNASTY_REDRAFT_VALUES[pid];
+    const name    = `${player.first_name || ''} ${player.last_name || ''}`.trim();
+
+    // Find owner in league
+    let ownerName = 'Free Agent';
+    let ownerUser = null;
+    if (leagueData) {
+      const userMap = {};
+      leagueData.users.forEach(u => { userMap[u.user_id] = u; });
+      for (const roster of leagueData.rosters) {
+        if ((roster.players || []).includes(pid)) {
+          const u = userMap[roster.owner_id] || {};
+          ownerName = (u.metadata?.team_name) || u.display_name || `Team ${roster.roster_id}`;
+          ownerUser = u;
+          break;
+        }
+      }
+    }
+
+    const section = $('player-profile-section');
+    section.innerHTML = '';
+    section.style.display = 'block';
+
+    const card = document.createElement('div');
+    card.className = `player-profile-card ${isBuy ? 'buy-card' : 'sell-card'}`;
+
+    // Position icon
+    const posIcon = document.createElement('div');
+    posIcon.className = `player-pos-icon ${isBuy ? 'buy-icon' : 'sell-icon'}`;
+    posIcon.textContent = pos;
+
+    // Info block
+    const info = document.createElement('div');
+    info.className = 'player-profile-info';
+
+    const nameEl = document.createElement('div');
+    nameEl.className = 'player-profile-name';
+    nameEl.textContent = name;
+
+    // Meta row (pos chip, team, age)
+    const meta = document.createElement('div');
+    meta.className = 'player-profile-meta';
+
+    const posChip = document.createElement('span');
+    posChip.className = 'pos-chip';
+    posChip.style.cssText = `color:${POS_COLORS[pos] || '#aaa'};font-size:0.78rem;padding:0.18rem 0.45rem;`;
+    posChip.textContent = pos;
+
+    const nflBadge = document.createElement('span');
+    nflBadge.className = 'badge';
+    nflBadge.textContent = player.team || 'Free Agent';
+
+    meta.appendChild(posChip);
+    meta.appendChild(nflBadge);
+
+    if (player.age) {
+      const ageBadge = document.createElement('span');
+      ageBadge.className = 'badge';
+      ageBadge.textContent = `Age ${player.age}`;
+      meta.appendChild(ageBadge);
+    }
+
+    // Stat boxes
+    const stats = document.createElement('div');
+    stats.className = 'player-profile-stats';
+
+    if (dynVal != null) {
+      const box = document.createElement('div');
+      box.className = 'player-stat-box';
+      box.innerHTML = `<div class="player-stat-label">Dynasty Value</div><div class="player-stat-value ${isBuy ? 'buy-val' : 'sell-val'}">${fmtVal(dynVal)}</div>`;
+      stats.appendChild(box);
+    }
+
+    if (rdraftVal != null) {
+      const box = document.createElement('div');
+      box.className = 'player-stat-box';
+      box.innerHTML = `<div class="player-stat-label">Redraft Value</div><div class="player-stat-value blue-val">${fmtVal(rdraftVal)}</div>`;
+      stats.appendChild(box);
+    }
+
+    // Owner row
+    const ownedRow = document.createElement('div');
+    ownedRow.className = 'player-owned-row';
+    ownedRow.appendChild(avatarEl(ownerUser?.avatar, ownerName, 'owner'));
+    const ownedLabel = document.createElement('span');
+    ownedLabel.innerHTML = `Owned by <span class="player-owned-name">${ownerName}</span>`;
+    ownedRow.appendChild(ownedLabel);
+
+    info.appendChild(nameEl);
+    info.appendChild(meta);
+    info.appendChild(stats);
+    info.appendChild(ownedRow);
+
+    card.appendChild(posIcon);
+    card.appendChild(info);
+    section.appendChild(card);
+
+    // Show suggested trades placeholder
+    const sugSection = $('suggested-trades-section');
+    sugSection.style.display = 'block';
+    sugSection.innerHTML = `
+      <div class="suggested-trades-title">
+        ${isBuy ? '🎯 Suggested Trade Packages to Acquire ' + name : '💰 Teams That Might Want ' + name}
+      </div>
+      <div class="suggested-trades-placeholder">
+        Trade suggestions are coming soon — we'll analyze every roster's needs and values to surface the best deals for you.
+      </div>
+    `;
+  }
+
+  // ── AI Trade Assistant ────────────────────────────────────────────────────────
+
+  function renderAITradeTeamSelect() {
+    if (!leagueData) return;
+
+    const { rosters, users } = leagueData;
+    const userMap = {};
+    users.forEach(u => { userMap[u.user_id] = u; });
+
+    const sorted = [...rosters].sort((a, b) => {
+      const aw = a.settings?.wins ?? 0, bw = b.settings?.wins ?? 0;
+      const al = a.settings?.losses ?? 0, bl = b.settings?.losses ?? 0;
+      if (bw !== aw) return bw - aw;
+      if (al !== bl) return al - bl;
+      return (b.settings?.fpts ?? 0) - (a.settings?.fpts ?? 0);
+    });
+
+    const teamBar = $('ai-team-bar');
+    teamBar.innerHTML = '';
+
+    $('ai-trades-content').innerHTML = `
+      <div class="ai-trades-placeholder">
+        <strong>Select your team above to get started</strong>
+        AI-powered trade suggestions will analyze your roster, positional needs, dynasty values, and league dynamics to surface the best available trades.
+      </div>
+    `;
+
+    sorted.forEach(roster => {
+      const user = userMap[roster.owner_id] || {};
+      const teamName = (user.metadata?.team_name) || user.display_name || 'Unknown';
+      const wins   = roster.settings?.wins   ?? 0;
+      const losses = roster.settings?.losses ?? 0;
+
+      const chip = document.createElement('button');
+      chip.className = 'roster-team-chip';
+      chip.appendChild(avatarEl(user.avatar, user.display_name, 'owner'));
+
+      const nameSpan = document.createElement('span');
+      nameSpan.textContent = teamName;
+      chip.appendChild(nameSpan);
+
+      const recSpan = document.createElement('span');
+      recSpan.className = 'chip-record';
+      recSpan.innerHTML = `(<span style="color:var(--win)">${wins}</span>-<span style="color:var(--loss)">${losses}</span>)`;
+      chip.appendChild(recSpan);
+
+      chip.addEventListener('click', () => {
+        teamBar.querySelectorAll('.roster-team-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        renderAITradeSuggestions(roster, teamName);
+      });
+
+      teamBar.appendChild(chip);
+    });
+  }
+
+  function renderAITradeSuggestions(roster, teamName) {
+    $('ai-trades-content').innerHTML = `
+      <div class="ai-trades-placeholder">
+        <strong>Analyzing ${teamName}…</strong>
+        AI trade analysis coming soon — we'll recommend trades based on this team's positional gaps, dynasty values, roster age, and available trade partners in the league.
+      </div>
+    `;
+  }
+
   // ── Bootstrap ───────────────────────────────────────────────────────────────
+
+  // Close player search dropdown when clicking outside
+  document.addEventListener('click', e => {
+    if (!e.target.closest('.player-search-bar')) {
+      const r = $('player-search-results');
+      if (r) r.style.display = 'none';
+    }
+  });
 
   $('league-id-input').addEventListener('keydown', e => {
     if (e.key === 'Enter') loadLeague();
