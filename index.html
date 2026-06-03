@@ -5077,9 +5077,10 @@
 
     trades.forEach((trade, idx) => {
       // ── Evaluate trade balance before building UI ──
-      // sideA = user sends, sideB = partner sends (user receives)
-      // winningSide 'A' → user sends more raw adj → user overpays → partner needs adj placeholder
-      // winningSide 'B' → partner sends more raw adj → user gets a deal → user needs adj placeholder
+      // sideA = user sends, sideB = partner sends (includes target player)
+      // The WINNING side (higher rawAdj = better package) gets a premium boost shown as a placeholder.
+      // valueAdjustment = how much extra KTC the losing side must send even after adding the equalizer.
+      // equalizingPlayerValue = shown in footer as "add ~X to balance."
       const ev = typeof TradeCalc !== 'undefined'
         ? TradeCalc.evaluateTrade(
             trade.mySends.map(p => ({ name: p.name, ktcValue: p.val })),
@@ -5087,8 +5088,9 @@
           )
         : null;
 
-      const myAdjPlaceholder      = (ev && ev.winningSide === 'B') ? ev.equalizingPlayerValue : 0;
-      const partnerAdjPlaceholder = (ev && ev.winningSide === 'A') ? ev.equalizingPlayerValue : 0;
+      // Winning side (better player) gets the premium boost displayed on their column.
+      const myAdjPlaceholder      = (ev && ev.winningSide === 'A') ? Math.max(0, ev.valueAdjustment) : 0;
+      const partnerAdjPlaceholder = (ev && ev.winningSide === 'B') ? Math.max(0, ev.valueAdjustment) : 0;
 
       const myKtcTotal   = trade.mySends.reduce((s, p) => s + p.val, 0);
       const partKtcTotal = trade.partnerSends.reduce((s, p) => s + p.val, 0);
@@ -5117,12 +5119,12 @@
       // Adj balance badge in header
       if (ev) {
         const adjBadge = document.createElement('span');
-        if (ev.winningSide === 'B') {
-          adjBadge.className = 'trade-balance-badge badge-deal';
-          adjBadge.textContent = '★ You win';
-        } else if (ev.winningSide === 'A') {
+        if (ev.winningSide === 'A') {
           adjBadge.className = 'trade-balance-badge badge-over';
           adjBadge.textContent = 'Overpaying';
+        } else if (ev.winningSide === 'B') {
+          adjBadge.className = 'trade-balance-badge badge-deal';
+          adjBadge.textContent = '★ You win';
         } else {
           adjBadge.className = 'trade-balance-badge badge-fair';
           adjBadge.textContent = 'Fair';
@@ -5170,7 +5172,7 @@
           phRow.className = 'target-trade-player-row is-adj-placeholder';
           phRow.innerHTML = `
             <span class="adj-placeholder-icon">+</span>
-            <span class="adj-placeholder-label">Value adjustment</span>
+            <span class="adj-placeholder-label">Quality premium</span>
             <span class="adj-placeholder-val">~${fmtVal(adjPlaceholder)}</span>
           `;
           col.appendChild(phRow);
@@ -5200,18 +5202,22 @@
       body.appendChild(makeCol(partnerName, trade.partnerSends, partnerAdjPlaceholder));
       card.appendChild(body);
 
-      // ── Slim footer: raw adj numbers only ──
+      // ── Footer: raw adj numbers + actionable balance message ──
       if (ev) {
         const footer = document.createElement('div');
         footer.className = 'trade-balance';
+        let balanceMsg = '';
+        if (ev.winningSide === 'B') {
+          balanceMsg = `<span style="font-size:0.7rem;color:#fbbf24;margin-left:auto">add ~${fmtVal(ev.equalizingPlayerValue)} to balance</span>`;
+        } else if (ev.winningSide === 'A') {
+          balanceMsg = `<span style="font-size:0.7rem;color:#f87171;margin-left:auto">sending ~${fmtVal(ev.equalizingPlayerValue)} excess</span>`;
+        }
         footer.innerHTML = `
           <span style="font-size:0.73rem;color:var(--muted)">Raw adj:</span>
           <span class="adj-you">${Math.round(ev.sideA.rawAdjTotal).toLocaleString()}</span>
           <span style="color:var(--muted)">↔</span>
           <span class="adj-them">${Math.round(ev.sideB.rawAdjTotal).toLocaleString()}</span>
-          <span style="font-size:0.7rem;color:var(--muted);margin-left:auto">
-            deficit: ${Math.round(ev.deficit).toLocaleString()}
-          </span>
+          ${balanceMsg}
         `;
         card.appendChild(footer);
       }
