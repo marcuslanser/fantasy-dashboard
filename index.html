@@ -2674,7 +2674,9 @@
         loadDynastyValues().catch(() => {}),
       ]);
 
-      leagueData = { league, rosters, users, playerData, nflState };
+      leagueData = { league, rosters, users, playerData, nflState,
+                     tradedPicks: tradedPicks || [], drafts: drafts || [] };
+      leaguePickMap = buildRosterPicksWithValues(rosters, tradedPicks || [], drafts || [], league);
 
       renderLeagueInfo(league);
       renderStandings(rosters, users);
@@ -3051,7 +3053,7 @@
   const POS_COLORS = {
     QB:'#ef4444', RB:'#22c55e', WR:'#60a5fa', TE:'#f97316',
     K:'#eab308',  DEF:'#6b7280', DL:'#a78bfa', LB:'#06b6d4',
-    DB:'#ec4899', OTH:'#52525b',
+    DB:'#ec4899', OTH:'#52525b', PICK:'#fbbf24',
   };
 
   const PICK_ORDER  = ['1st Round','2nd Round','3rd Round','4th+'];
@@ -3130,6 +3132,77 @@
     });
 
     return holdings;
+  }
+
+  // Builds a map of rosterId → pick entry objects with DYNASTY_VALUES looked up.
+  // Current-year picks use DP_{round-1}_{slot-1} estimated from standings.
+  // Future-year picks use FP_{year}_{round}.
+  function buildRosterPicksWithValues(rosters, tradedPicks, drafts, league) {
+    const draftRounds   = league.settings?.draft_rounds ?? 3;
+    const leagueSeason  = parseInt(league.season) || new Date().getFullYear();
+    const numTeams      = rosters.length;
+
+    const currentDraftDone = (drafts || []).some(
+      d => parseInt(d.season) === leagueSeason && d.status === 'complete'
+    );
+    const minYear = currentDraftDone ? leagueSeason + 1 : leagueSeason;
+
+    const yearsInPicks = (tradedPicks || []).map(p => parseInt(p.season)).filter(y => y >= minYear);
+    const maxYear      = yearsInPicks.length ? Math.max(...yearsInPicks) : minYear + 2;
+    const futureSeasons = [];
+    for (let y = minYear; y <= Math.max(maxYear, minYear + 2); y++) futureSeasons.push(String(y));
+
+    const holdings = computePickHoldings(rosters, tradedPicks || [], draftRounds, futureSeasons, minYear);
+
+    // Estimate draft slot from current standings: worst record = picks earliest (slot 1)
+    const sortedByRecord = [...rosters].sort((a, b) => {
+      const aw = a.settings?.wins ?? 0, bw = b.settings?.wins ?? 0;
+      if (aw !== bw) return aw - bw;
+      return (b.settings?.losses ?? 0) - (a.settings?.losses ?? 0);
+    });
+    const draftSlot = {};
+    sortedByRecord.forEach((r, i) => { draftSlot[r.roster_id] = i + 1; });
+
+    const ROUND_NAMES = ['1st', '2nd', '3rd', '4th'];
+    const map = {};
+    rosters.forEach(r => { map[r.roster_id] = []; });
+
+    rosters.forEach(r => {
+      (holdings[r.roster_id] || []).forEach(({ season, round, originalOwner }) => {
+        const year    = parseInt(season);
+        const rn      = ROUND_NAMES[round - 1] || `${round}th`;
+        let lookupKey, displayName;
+
+        if (year === minYear && !currentDraftDone) {
+          // Current year: use projected draft slot from standings
+          const slot = draftSlot[originalOwner] ?? Math.ceil(numTeams / 2);
+          lookupKey   = `DP_${round - 1}_${slot - 1}`;
+          displayName = `${season} ${rn} Rd (Proj. Pick ${slot})`;
+        } else {
+          lookupKey   = `FP_${season}_${round}`;
+          displayName = `${season} ${rn} Round Pick`;
+        }
+
+        const val = DYNASTY_VALUES[lookupKey] ?? 0;
+        if (val <= 0) return; // skip if no value data
+
+        map[r.roster_id].push({
+          pid:              `pick_${season}_${round}_${originalOwner}`,
+          name:             displayName,
+          pos:              'PICK',
+          val,
+          posZ:             0,    // picks have no positional z-score
+          round,
+          season:           String(season),
+          originalRosterId: originalOwner,
+          isPick:           true,
+        });
+      });
+
+      map[r.roster_id].sort((a, b) => b.val - a.val);
+    });
+
+    return map;
   }
 
   function renderTeams(rosters, users, playerData, tradedPicks, drafts, league) {
@@ -3411,6 +3484,7 @@
 
   let DYNASTY_VALUES = {};
   let DYNASTY_REDRAFT_VALUES = {};
+  let leaguePickMap = {}; // rosterId → [pickEntry, ...]
 
   async function loadDynastyValues() {
     const url = 'https://datalakestoragelanser.blob.core.windows.net/silver/fantasycalc/values.csv';
@@ -4779,9 +4853,14 @@
     const posData   = computeLeaguePosData(rosters, playerData);
     const myZ       = posData.teamZ[selectedRoster.roster_id] || {};
     const partnerZ  = posData.teamZ[partnerRoster.roster_id]  || {};
-    const myPool    = getPlayerPoolSorted(selectedRoster, playerData, myZ);
-    const partPool  = getPlayerPoolSorted(partnerRoster,  playerData, partnerZ)
-      .filter(p => p.pid !== targetPid);
+    const myPool   = [
+      ...getPlayerPoolSorted(selectedRoster, playerData, myZ),
+      ...(leaguePickMap[selectedRoster.roster_id] || []),
+    ];
+    const partPool = [
+      ...getPlayerPoolSorted(partnerRoster, playerData, partnerZ).filter(p => p.pid !== targetPid),
+      ...(leaguePickMap[partnerRoster.roster_id] || []).filter(p => p.pid !== targetPid),
+    ];
 
     const targetEntry = {
       pid: targetPid,
