@@ -4792,7 +4792,23 @@
       isStarter: true,
     };
 
-    const TOL = 500;
+    // Balance criterion: equalizingPlayerValue (lower = more rawAdj-balanced).
+    // Falls back to raw KTC delta if TradeCalc is not loaded.
+    function adjScore(mySends, partnerSends) {
+      if (typeof TradeCalc === 'undefined') {
+        return Math.abs(
+          mySends.reduce((s, p) => s + p.val, 0) -
+          partnerSends.reduce((s, p) => s + p.val, 0)
+        );
+      }
+      return TradeCalc.evaluateTrade(
+        mySends.map(p => ({ name: p.name, ktcValue: p.val })),
+        partnerSends.map(p => ({ name: p.name, ktcValue: p.val }))
+      ).equalizingPlayerValue;
+    }
+
+    // Trades are "reasonably balanced" if the losing side needs to add at most a ~2000-value player.
+    const ADJ_TOL = 2000;
     const trades  = [];
     const usedMy  = new Set();
 
@@ -4804,53 +4820,55 @@
       return true;
     }
 
-    // Option A: 1-for-1
-    const a = myPool.find(p => Math.abs(p.val - targetVal) <= TOL);
-    if (a) tryAdd([a], [targetEntry]);
+    // Option A: 1-for-1 — first player in positional-strength order within rawAdj tolerance
+    for (const p of myPool) {
+      if (adjScore([p], [targetEntry]) <= ADJ_TOL) {
+        tryAdd([p], [targetEntry]);
+        break;
+      }
+    }
 
-    // Option B: user sends 2 for target alone
+    // Option B: 2-for-1 — best rawAdj-balanced pair (trades from strongest positions)
     {
-      const pool = myPool.filter(p => !usedMy.has(p.pid)).slice(0, 10);
-      let found = false;
-      outer: for (let i = 0; i < pool.length && !found; i++) {
-        for (let j = i + 1; j < pool.length && !found; j++) {
-          if (Math.abs(pool[i].val + pool[j].val - targetVal) <= TOL) {
-            if (tryAdd([pool[i], pool[j]], [targetEntry])) found = true;
-          }
+      const pool = myPool.filter(p => !usedMy.has(p.pid)).slice(0, 12);
+      let bestPair = null, bestScore = ADJ_TOL;
+      for (let i = 0; i < pool.length; i++) {
+        for (let j = i + 1; j < pool.length; j++) {
+          const score = adjScore([pool[i], pool[j]], [targetEntry]);
+          if (score < bestScore) { bestScore = score; bestPair = [pool[i], pool[j]]; }
         }
       }
+      if (bestPair) tryAdd(bestPair, [targetEntry]);
     }
 
-    // Option C: partner adds a sweetener; user sends player(s) to match combined value
+    // Option C: partner adds a sweetener — best rawAdj-balanced package
     if (trades.length < 3) {
+      let bestC = null, bestScore = ADJ_TOL;
       for (const sw of partPool.slice(0, 8)) {
-        if (trades.length >= 3) break;
-        const combined = targetVal + sw.val;
         const eligible = myPool.filter(p => !usedMy.has(p.pid));
-
-        // 1 my player for target + sweetener
-        const c1 = eligible.find(p => Math.abs(p.val - combined) <= TOL);
-        if (c1) { tryAdd([c1], [targetEntry, sw]); break; }
-
-        // 2 my players for target + sweetener
-        let found2 = false;
-        outer2: for (let i = 0; i < eligible.length && i < 8 && !found2; i++) {
-          for (let j = i + 1; j < eligible.length && j < 8 && !found2; j++) {
-            if (Math.abs(eligible[i].val + eligible[j].val - combined) <= TOL) {
-              if (tryAdd([eligible[i], eligible[j]], [targetEntry, sw])) found2 = true;
-            }
+        for (const p of eligible) {
+          const score = adjScore([p], [targetEntry, sw]);
+          if (score < bestScore) { bestScore = score; bestC = { my: [p], partner: [targetEntry, sw] }; }
+        }
+        const cap = Math.min(eligible.length, 8);
+        for (let i = 0; i < cap; i++) {
+          for (let j = i + 1; j < cap; j++) {
+            const score = adjScore([eligible[i], eligible[j]], [targetEntry, sw]);
+            if (score < bestScore) { bestScore = score; bestC = { my: [eligible[i], eligible[j]], partner: [targetEntry, sw] }; }
           }
         }
-        if (found2) break;
       }
+      if (bestC) tryAdd(bestC.my, bestC.partner);
     }
 
-    // Fallback: closest 1-for-1 options with relaxed tolerance
+    // Fallback: fill remaining slots with single-player options sorted by rawAdj balance
     if (trades.length < 3) {
-      const sorted = [...myPool]
-        .filter(p => !trades.some(t => t.mySends.length === 1 && t.mySends[0].pid === p.pid))
-        .sort((a, b) => Math.abs(a.val - targetVal) - Math.abs(b.val - targetVal));
-      for (const p of sorted) {
+      const alreadyUsed = new Set(trades.flatMap(t => t.mySends.map(p => p.pid)));
+      const sorted = myPool
+        .filter(p => !alreadyUsed.has(p.pid))
+        .map(p => ({ p, score: adjScore([p], [targetEntry]) }))
+        .sort((a, b) => a.score - b.score);
+      for (const { p } of sorted) {
         if (trades.length >= 3) break;
         tryAdd([p], [targetEntry]);
       }
@@ -5063,7 +5081,7 @@
     if (!trades.length) {
       const ph = document.createElement('div');
       ph.className = 'target-no-trades';
-      ph.textContent = 'No balanced trade packages found within the 500-value tolerance. This player may be significantly over or under-valued relative to your current roster assets.';
+      ph.textContent = 'No balanced trade packages found. This player may be significantly over or under-valued relative to your current roster assets.';
       container.appendChild(ph);
       return;
     }
